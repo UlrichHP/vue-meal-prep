@@ -20,8 +20,14 @@
             </router-link>
             <v-btn text class="hidden-sm-and-down" to="/menu">Menu</v-btn>
             <v-spacer class="hidden-sm-and-down"></v-spacer>
-            <v-btn text class="hidden-sm-and-down" to="/sign-in">SIGN IN</v-btn>
-            <v-btn color="brown lighten-3" class="hidden-sm-and-down" to="/join">JOIN</v-btn>
+            <div v-if="!isAuthenticated" class="hidden-sm-and-down">
+                <v-btn text to="/sign-in">SIGN IN</v-btn>
+                <v-btn color="brown lighten-3" to="/join">JOIN</v-btn>
+            </div>
+            <div v-else>
+                <v-btn text to="/about">PROFILE</v-btn>
+                <v-btn outlined color="white" @click="logout">Logout</v-btn>
+            </div>
         </v-app-bar>
     </span>
 </template>
@@ -29,7 +35,7 @@
 <script>
 export default {
     name: 'AppNavigation',
-    data () {
+    data() {
         return {
             appTitle: 'Meal Prep',
             drawer: false,
@@ -40,6 +46,16 @@ export default {
                 { title: 'Join' }
             ]
         };
+    },
+    computed: {
+        isAuthenticated() {
+            return this.$store.getters.isAuthenticated;
+        }
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('userSignOut');
+        }
     }
 };
 </script>
